@@ -14,7 +14,7 @@ public class OfferService {
         this.offerRepo = offerRepo;
     }
 
-    public List<Offer> getAllMovies(){
+    public List<Offer> getAllOffers(){
         return offerRepo.findAll();
     }
 }
