@@ -5,5 +5,4 @@ export type Address = {
     city: string,
     zip: number,
     country: string,
-    offerId: string
 }

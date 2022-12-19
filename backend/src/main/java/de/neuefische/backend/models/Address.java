@@ -11,7 +11,6 @@ public record Address(
         String streetNumber,
         String city,
         int zip,
-        String country,
-        String offerId
+        String country
 ) {
 }
