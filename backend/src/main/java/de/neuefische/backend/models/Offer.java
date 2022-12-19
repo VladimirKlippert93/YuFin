@@ -1,15 +1,15 @@
 package de.neuefische.backend.models;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 @Document("Offer")
 public record Offer(
+        @Id
         String id,
         String title,
         String price,
-        List<Address> address,
+        Address address,
         String description
 ) {
 
