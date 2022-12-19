@@ -1,9 +1,9 @@
-import {Address} from "cluster";
+import {Address} from "./Address";
 
 export type Offer = {
     id: string,
     title: string,
     price: string,
-    address: Address[],
+    address: Address
     description: string
 }
