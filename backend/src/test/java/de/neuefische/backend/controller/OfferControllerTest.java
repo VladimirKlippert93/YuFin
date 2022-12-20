@@ -56,10 +56,16 @@ class OfferControllerTest {
                             "id": "1",
                             "title": "help",
                             "price": "money",
-                            "adress": ["3","street", "streetnumber","city",23,"country"],
+                            "address": {
+                            "id":"3",
+                            "street":"street",
+                            "streetNumber":"streetnumber",
+                            "city":"city",
+                            "zip":23,
+                            "country":"country"
+                            },
                             "description": "very good help"
                             }
                             """));
         }
-
 }
