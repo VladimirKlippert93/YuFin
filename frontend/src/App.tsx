@@ -1,13 +1,19 @@
 import React from 'react';
 import './App.css';
 import OfferApp from "./OfferGallery/OfferApp";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import OfferDetails from "./OfferGallery/component/OfferDetails";
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <OfferApp/>
+
+        <BrowserRouter>
+        <Routes>
+            <Route path={"/offers/:id"} element={<OfferDetails/>}></Route>
+            <Route path={"/"} element={<OfferApp/>}></Route>
+        </Routes>
+        </BrowserRouter>
     </div>
   );
 }
-
-export default App;
