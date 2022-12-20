@@ -6,7 +6,7 @@ import SearchBar from "./component/SearchBar";
 
 export default function OfferApp(){
 
-    const [offer, setOffers] = useState<Offer[]>([])
+    const [offers, setOffers] = useState<Offer[]>([])
     const [searchText, setSearchText] = useState<string>("")
 
     useEffect(()=>{
@@ -21,7 +21,8 @@ export default function OfferApp(){
             .catch(e=>console.error(e))
     }
 
-    const filteredSearch = offer.filter((offer)=> offer.title.toLowerCase().includes(searchText.toLowerCase()))
+    const filteredSearch = offers.filter((offer)=> offer.title.toLowerCase().includes(searchText.toLowerCase()))
+
     function handleSearchText(searchText: string){
         setSearchText(searchText)
     }
