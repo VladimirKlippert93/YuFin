@@ -13,11 +13,11 @@ export default function OfferDetails(){
     useEffect(()=>{
     if(id) {
         getOfferById(id)
-    }
+        }
     },[id])
 
     function getOfferById(id: string){
-        axios.get("/api/offers/details/"+id)
+        axios.get("/api/offers/"+id)
             .then(response=>response.data)
             .then(data=>{
                 setOffer(data)
