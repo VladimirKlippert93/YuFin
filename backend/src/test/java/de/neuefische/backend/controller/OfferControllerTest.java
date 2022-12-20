@@ -1,5 +1,8 @@
 package de.neuefische.backend.controller;
 
+import de.neuefische.backend.models.Address;
+import de.neuefische.backend.models.Offer;
+import de.neuefische.backend.repository.OfferRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,7 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OfferControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
+    @Autowired
+    private OfferRepo offerRepo;
     @Test
     @DirtiesContext
     void expectEmptyListOnGet() throws Exception {
@@ -24,5 +28,38 @@ class OfferControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
+
+    @Test
+    @DirtiesContext
+    void getOfferById() throws Exception {
+        Address address = new Address(
+                "3",
+                "street",
+                "streetnumber",
+                "city",
+                23,
+                "country");
+
+        Offer newOffer = new Offer(
+                "1",
+                "help",
+                "money",
+                address,
+                "very good help"
+        );
+
+        Offer result = offerRepo.save(newOffer);
+        mockMvc.perform(get("/api/offers/"+result.id()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                            {
+                            "id": "1",
+                            "title": "help",
+                            "price": "money",
+                            "adress": ["3","street", "streetnumber","city",23,"country"],
+                            "description": "very good help"
+                            }
+                            """));
+        }
 
 }
