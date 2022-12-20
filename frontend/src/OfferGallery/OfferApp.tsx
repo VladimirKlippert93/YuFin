@@ -2,14 +2,16 @@ import OfferGallery from "./component/OfferGallery";
 import {useEffect, useState} from "react";
 import {Offer} from "./models/Offer";
 import axios from "axios";
+import SearchBar from "./component/SearchBar";
 
 export default function OfferApp(){
 
     const [offer, setOffers] = useState<Offer[]>([])
+    const [searchText, setSearchText] = useState<string>("")
 
     useEffect(()=>{
         getOffers()
-    })
+    },[searchText])
 
     function getOffers(){
         axios.get("api/offers")
@@ -19,9 +21,15 @@ export default function OfferApp(){
             .catch(e=>console.error(e))
     }
 
+    const filteredSearch = offer.filter((offer)=> offer.title.toLowerCase().includes(searchText.toLowerCase()))
+    function handleSearchText(searchText: string){
+        setSearchText(searchText)
+    }
+
     return (
         <div>
-            <OfferGallery offerList={offer}/>
+            <SearchBar handleSearchText={handleSearchText}/>
+            <OfferGallery offerList={filteredSearch}/>
         </div>
     )
 }
