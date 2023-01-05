@@ -5,7 +5,7 @@ type RegisterProps = {
     register: (user: string, email: string, password: string)=>void
 }
 
-const Register = (props: RegisterProps)=> {
+const Register = (props: RegisterProps) => {
 
     const [user, setUser] = useState<string>("")
     const [email, setEmail] = useState<string>("")
