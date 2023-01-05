@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {Offer} from "../../models/Offer";
+import {Offer} from "../models/Offer";
 import axios from "axios";
 
 export default function OfferDetails(){
