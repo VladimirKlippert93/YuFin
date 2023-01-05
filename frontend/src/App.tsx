@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import OfferApp from "./OfferGallery/OfferApp";
+import OfferApp from "./offergallery/OfferApp";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import OfferDetails from "./OfferGallery/component/OfferDetails";
+import OfferDetails from "./offergallery/component/offers/OfferDetails";
 
 export default function App() {
   return (

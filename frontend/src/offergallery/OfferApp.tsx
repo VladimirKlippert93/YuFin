@@ -1,8 +1,8 @@
-import OfferGallery from "./component/OfferGallery";
+import OfferGallery from "./component/offers/OfferGallery";
 import {useEffect, useState} from "react";
 import {Offer} from "./models/Offer";
 import axios from "axios";
-import SearchBar from "./component/SearchBar";
+import SearchBar from "./component/offers/SearchBar";
 
 export default function OfferApp(){
 

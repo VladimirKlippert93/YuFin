@@ -1,4 +1,4 @@
-import {Offer} from "../models/Offer";
+import {Offer} from "../../models/Offer";
 import OfferCard from "./OfferCard";
 
 type OfferGalleryProps = {

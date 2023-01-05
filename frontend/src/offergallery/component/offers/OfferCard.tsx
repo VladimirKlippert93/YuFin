@@ -1,4 +1,4 @@
-import {Offer} from "../models/Offer";
+import {Offer} from "../../models/Offer";
 import {useNavigate} from "react-router-dom";
 import * as React from 'react';
 export type OfferCardProps = {
