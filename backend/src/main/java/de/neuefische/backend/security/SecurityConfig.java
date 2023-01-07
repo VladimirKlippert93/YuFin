@@ -22,9 +22,13 @@ public class SecurityConfig {
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
-                .httpBasic().and()
+                .httpBasic()
+                .and()
                 .authorizeRequests()
+                .antMatchers("/api/users/me").permitAll()
+                .antMatchers("/api/users/login").permitAll()
                 .antMatchers("/**").permitAll()
-                .and().build();
+                .and()
+                .build();
     }
 }
