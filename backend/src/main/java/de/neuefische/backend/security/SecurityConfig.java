@@ -26,9 +26,6 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/users/me").authenticated()
-                .antMatchers("/api/users/login").permitAll()
-                .antMatchers("/api/users/register").permitAll()
-                .antMatchers("/**").permitAll()
                 .and()
                 .build();
     }
