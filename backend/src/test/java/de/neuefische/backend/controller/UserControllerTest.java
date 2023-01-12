@@ -65,4 +65,20 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("anonymousUser"));
     }
+
+    @Test
+    @DirtiesContext
+    void saveUser() throws Exception {
+        MvcResult result = mockMvc.perform(post("/api/users/register")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                        {
+                            "username": "user",
+                            "password": "123"
+                        }
+                        """))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
 }
