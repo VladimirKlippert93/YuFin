@@ -25,8 +25,9 @@ public class SecurityConfig {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/users/me").permitAll()
+                .antMatchers("/api/users/me").authenticated()
                 .antMatchers("/api/users/login").permitAll()
+                .antMatchers("/api/users/register").permitAll()
                 .antMatchers("/**").permitAll()
                 .and()
                 .build();
