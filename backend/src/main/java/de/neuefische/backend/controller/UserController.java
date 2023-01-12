@@ -1,6 +1,5 @@
 package de.neuefische.backend.controller;
 
-import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.models.UserDTO;
 import de.neuefische.backend.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public MongoUser addUser (@RequestBody UserDTO userDTO){
+    public UserDTO addUser (@RequestBody UserDTO userDTO){
         return userService.addUser(userDTO);
     }
 }

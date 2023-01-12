@@ -25,15 +25,15 @@ public class UserService implements UserDetailsService {
         this.argon2Service = argon2Service;
     }
 
-    public MongoUser addUser (UserDTO user){
-        MongoUser newMongoUser = new MongoUser(user.username(), argon2Service.encode(user.password()),user.email(), new ArrayList<>());
-        mongoUserRepo.save(newMongoUser);
+    public UserDTO addUser (UserDTO user){
+        UserDTO newUser = new UserDTO(user.username(), argon2Service.encode(user.password()),user.email(), new ArrayList<>());
+        mongoUserRepo.save(newUser);
 
-        return new MongoUser(
-                newMongoUser.username(),
+        return new UserDTO(
+                newUser.username(),
                 "****",
-                newMongoUser.email(),
-                newMongoUser.offerList()
+                newUser.email(),
+                newUser.offerList()
         );
     }
 
