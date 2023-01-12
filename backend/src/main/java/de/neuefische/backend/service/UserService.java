@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
 
         return new MongoUser(
                 newMongoUser.id(),
-                newMongoUser.name(),
+                newMongoUser.username(),
                 "****",
                 newMongoUser.email(),
                 newMongoUser.offerList()
@@ -37,9 +37,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MongoUser mongoUser = mongoUserRepo.finByUsername(username)
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        MongoUser mongoUser = mongoUserRepo.findByUsername(name)
                 .orElseThrow(()->new UsernameNotFoundException("User not found!"));
-        return new User(mongoUser.name(), mongoUser.password(), List.of());
+        return new User(mongoUser.username(), mongoUser.password(), List.of());
     }
 }
