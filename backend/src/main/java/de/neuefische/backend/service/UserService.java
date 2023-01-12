@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,17 +19,17 @@ public class UserService implements UserDetailsService {
     private final MongoUserRepo mongoUserRepo;
     private final Argon2Service argon2Service;
 
+
     public UserService(MongoUserRepo mongoUserRepo, Argon2Service argon2Service) {
         this.mongoUserRepo = mongoUserRepo;
         this.argon2Service = argon2Service;
     }
 
     public MongoUser addUser (UserDTO user){
-        MongoUser newMongoUser = new MongoUser("",user.name(), argon2Service.encode(user.password()),user.email(), user.offerList());
+        MongoUser newMongoUser = new MongoUser(user.username(), argon2Service.encode(user.password()),user.email(), new ArrayList<>());
         mongoUserRepo.save(newMongoUser);
 
         return new MongoUser(
-                newMongoUser.id(),
                 newMongoUser.username(),
                 "****",
                 newMongoUser.email(),
