@@ -10,7 +10,7 @@ import java.util.List;
 public record MongoUser(
         @Id
         String id,
-        String name,
+        String username,
         String password,
         @Indexed(unique = true)
         String email,
