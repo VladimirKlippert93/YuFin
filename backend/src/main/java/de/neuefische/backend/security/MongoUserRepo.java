@@ -1,7 +1,10 @@
 package de.neuefische.backend.security;
 
-import de.neuefische.backend.models.User;
+import de.neuefische.backend.models.MongoUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface MongoUserRepo extends MongoRepository<User, String> {
+import java.util.Optional;
+
+public interface MongoUserRepo extends MongoRepository<MongoUser, String> {
+    Optional<MongoUser> finByUsername(String username);
 }
