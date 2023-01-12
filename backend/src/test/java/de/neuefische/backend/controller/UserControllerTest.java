@@ -57,4 +57,12 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("user"));
     }
+    @Test
+    @DirtiesContext
+    @WithMockUser("vladi")
+    void logout() throws Exception {
+        mockMvc.perform(post("/api/users/logout").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().string("anonymousUser"));
+    }
 }
