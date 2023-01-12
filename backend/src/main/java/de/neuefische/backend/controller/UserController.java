@@ -24,7 +24,7 @@ public class UserController {
         if(principal !=null){
             return principal.getName();
         }
-        return "unknownUser";
+        return "anonymousUser";
     }
 
     @PostMapping("/login")
@@ -36,7 +36,7 @@ public class UserController {
     public String logout(HttpSession httpSession){
         httpSession.invalidate();
         SecurityContextHolder.clearContext();
-        return "unkownUser";
+        return "anonymousUser";
     }
 
     @PostMapping("/register")
