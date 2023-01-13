@@ -25,7 +25,8 @@ public class OfferService {
                 offer.title(),
                 offer.price(),
                 offer.address(),
-                offer.description()
+                offer.description(),
+                offer.author()
         );
         return offerRepo.save(newOffer);
     }
