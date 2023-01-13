@@ -1,3 +1,6 @@
+import {Offer} from "./Offer";
+
 export type User = {
-    name: string
+    name: string,
+    offers: Offer[]
 }
