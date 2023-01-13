@@ -20,4 +20,13 @@ public class OfferService {
     public Optional<Offer> getOfferById(String id){
         return offerRepo.findById(id);
     }
+    public Offer saveOffer(Offer offer){
+        Offer newOffer = new Offer(
+                offer.title(),
+                offer.price(),
+                offer.address(),
+                offer.description()
+        );
+        return offerRepo.save(newOffer);
+    }
 }
