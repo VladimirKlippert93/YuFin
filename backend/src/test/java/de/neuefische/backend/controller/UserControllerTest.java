@@ -1,7 +1,7 @@
 package de.neuefische.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.neuefische.backend.models.UserDTO;
+import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.security.MongoUserRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,10 +75,14 @@ class UserControllerTest {
                         .content("""
                         {
                             "username": "user",
-                            "password": "123"
+                            "password": "123",
+                            "email": "ab@212"
                         }
                         """))
                 .andExpect(status().isOk())
                 .andReturn();
+        String content = result.getResponse().getContentAsString();
+        MongoUser user = objectMapper.readValue(content, MongoUser.class);
+        assertNotNull(user.email());
     }
 }
