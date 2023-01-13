@@ -7,7 +7,8 @@ public record Offer(
         String title,
         String price,
         Address address,
-        String description
+        String description,
+        String author
 ) {
 
 }
