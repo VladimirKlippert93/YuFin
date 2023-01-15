@@ -3,12 +3,12 @@ import axios from "axios";
 
 export default function useUser(){
 
-    const [username, setUsernamename] = useState<string>("")
+    const [username, setUsername] = useState<string>("")
 
     useEffect(()=>{
         axios.get("/api/users/me")
             .then(result => result.data)
-            .then(setUsernamename)
+            .then(data => setUsername(data))
     },[])
 
     function login(username: string, password: string){
@@ -20,7 +20,7 @@ export default function useUser(){
         })
             .then((result)=> result.data)
             .then(data => {
-                setUsernamename(data)
+                setUsername(data)
                 return data
             })
     }
@@ -29,16 +29,16 @@ export default function useUser(){
         return axios.post("/api/users/logout")
             .then((result) => result.data)
             .then((data) => {
-                setUsernamename(data)
+                setUsername(data)
                 return data
             })
     }
 
-    function register(username: string, email: string, password: string){
+    function register(username: string, password: string,email: string){
         axios.post("/api/users/register", {
             username: username,
-            email: email,
-            password: password
+            password: password,
+            email: email
         }).catch(e => console.error(e))
     }
     return {username, login, logout, register}
