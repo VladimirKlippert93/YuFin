@@ -3,7 +3,7 @@ import Login from "./Login";
 
 type LoginProps = {
     login: (name: string, password: string) => Promise<string>
-    register: (name: string, email:string, password: string) => void
+    register: (name: string, password: string, email:string) => void
 }
 
 const LoginRegisterPage = (props: LoginProps) => {
