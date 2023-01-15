@@ -2,19 +2,19 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 type RegisterProps = {
-    register: (user: string, email: string, password: string)=>void
+    register: (user: string, password: string, email: string)=>void
 }
 
 const Register = (props: RegisterProps) => {
 
-    const [user, setUser] = useState<string>("")
-    const [email, setEmail] = useState<string>("")
+    const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+    const [email, setEmail] = useState<string>("")
 
     const navigation = useNavigate()
 
     function onChangeUser(event: ChangeEvent<HTMLInputElement>){
-        setUser(event.target.value)
+        setUsername(event.target.value)
     }
 
     function onChangeEmail(event: ChangeEvent<HTMLInputElement>){
@@ -27,11 +27,11 @@ const Register = (props: RegisterProps) => {
 
     function onRegisterSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault()
-        props.register(user,email,password)
-        setUser("")
-        setEmail("")
+        props.register(username,password,email)
+        setUsername("")
         setPassword("")
-        navigation("/")
+        setEmail("")
+        navigation("/login")
     }
 
     return(
@@ -42,30 +42,17 @@ const Register = (props: RegisterProps) => {
             <div>
                 <form onSubmit={onRegisterSubmit}>
                     <div>
-                        {user.length >= 1 ?
+                        {username.length >= 1 ?
                             <input onChange={onChangeUser}
-                                   value={user}
+                                   value={username}
                                    type="text"
                                    placeholder="Name"/> :
                             <input type="test"
                                     onChange={onChangeUser}
                                     placeholder="Name"
-                                    value={user}/>
+                                    value={username}/>
                         }
                         <label>Name</label>
-                    </div>
-                    <div>
-                        {email.includes('@') ?
-                        <input onChange={onChangeEmail}
-                                value={email}
-                                type="email"
-                                placeholder="E-Mail"/> :
-                            <input onChange={onChangeEmail}
-                                value={email}
-                                type="email"
-                                placeholder={"E-Mail"}/>
-                            }
-                            <label>E-Mail</label>
                     </div>
                     <div>
                         {password.length <= 8 ?
@@ -81,6 +68,19 @@ const Register = (props: RegisterProps) => {
                         <label>Password</label>
                         <div>
                             <p>The Password needs at least 8 Characters.</p>
+                        </div>
+                        <div>
+                            {email.includes('@') ?
+                                <input onChange={onChangeEmail}
+                                       value={email}
+                                       type="email"
+                                       placeholder="E-Mail"/> :
+                                <input onChange={onChangeEmail}
+                                       value={email}
+                                       type="email"
+                                       placeholder={"E-Mail"}/>
+                            }
+                            <label>E-Mail</label>
                         </div>
                     </div>
                     <div>
