@@ -5,7 +5,7 @@ type LoginProps = {
     login: (name: string, password: string) => Promise<string>
 }
 
-const Login = (props: LoginProps) => {
+export default function Login(props: LoginProps){
 
     const [name, setName] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -57,5 +57,3 @@ const Login = (props: LoginProps) => {
         </div>
     )
 }
-
-export default Login
