@@ -1,14 +1,22 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {User} from "../models/User";
 
 export default function useUser(){
 
-    const [username, setUsername] = useState<string>("")
+    const emptyUser: User = {
+        "username": "",
+        "password": "",
+        "email": "",
+        "offerList": []
+    }
+
+    const [user, setUser] = useState<User>(emptyUser)
 
     useEffect(()=>{
         axios.get("/api/users/me")
             .then(result => result.data)
-            .then(data => setUsername(data))
+            .then(data => setUser(data))
     },[])
 
     function login(username: string, password: string){
@@ -20,7 +28,7 @@ export default function useUser(){
         })
             .then((result)=> result.data)
             .then(data => {
-                setUsername(data)
+                setUser(data)
                 return data
             })
     }
@@ -29,7 +37,7 @@ export default function useUser(){
         return axios.post("/api/users/logout")
             .then((result) => result.data)
             .then((data) => {
-                setUsername(data)
+                setUser(data)
                 return data
             })
     }
@@ -41,5 +49,5 @@ export default function useUser(){
             email: email
         }).catch(e => console.error(e))
     }
-    return {username, login, logout, register}
+    return {user, login, logout, register}
 }
