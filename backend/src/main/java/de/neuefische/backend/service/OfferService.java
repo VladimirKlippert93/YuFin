@@ -1,10 +1,10 @@
 package de.neuefische.backend.service;
 import de.neuefische.backend.models.Offer;
+import de.neuefische.backend.models.OfferDTO;
 import de.neuefische.backend.repository.OfferRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OfferService {
@@ -17,11 +17,12 @@ public class OfferService {
     public List<Offer> getAllOffers(){
         return offerRepo.findAll();
     }
-    public Optional<Offer> getOfferById(String id){
-        return offerRepo.findById(id);
+    public Offer getOfferById(String id){
+        return offerRepo.findById(id).orElseThrow();
     }
-    public Offer saveOffer(Offer offer){
+    public Offer saveOffer(OfferDTO offer){
         Offer newOffer = new Offer(
+                offer.id(),
                 offer.title(),
                 offer.price(),
                 offer.address(),
