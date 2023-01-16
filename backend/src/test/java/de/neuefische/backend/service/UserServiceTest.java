@@ -1,5 +1,6 @@
 package de.neuefische.backend.service;
 
+import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.models.UserDTO;
 import de.neuefische.backend.security.MongoUserRepo;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class UserServiceTest {
                 "email",
                 Collections.emptyList()
         );
-        UserDTO expected = new UserDTO(
+        MongoUser expected = new MongoUser(
 
                 "username",
                 "****",
@@ -35,7 +36,7 @@ class UserServiceTest {
         when(mongoUserRepo.save(expected)).thenReturn(expected);
         when(argon2Service.encode("123")).thenReturn("****");
 
-        UserDTO actual = userService.addUser(userToAdd);
+        MongoUser actual = userService.addUser(userToAdd);
 
         assertEquals(expected, actual);
         verify(mongoUserRepo).save(expected);
