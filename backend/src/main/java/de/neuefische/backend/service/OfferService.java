@@ -31,4 +31,8 @@ public class OfferService {
         );
         return offerRepo.save(newOffer);
     }
+
+    public void deleteById(String id){
+        offerRepo.deleteById(id);
+    }
 }
