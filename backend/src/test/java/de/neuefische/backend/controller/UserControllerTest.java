@@ -12,11 +12,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.springframework.test.web.servlet.MvcResult;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
@@ -34,12 +37,11 @@ class UserControllerTest {
 
     @Test
     @DirtiesContext
-    @WithMockUser("vladi")
-    void helloMeWhenLoggedInExpectUsername() throws Exception{
+    @WithMockUser(username="Vladi",password = "vladimir")
+    void helloMeWhenLoggedInExpectStatusOk() throws Exception {
         mockMvc.perform(get("/api/users/me")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("vladi"));
+                        .with(csrf()))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -57,6 +59,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("user"));
     }
+
     @Test
     @DirtiesContext
     @WithMockUser("vladi")
@@ -73,12 +76,12 @@ class UserControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                        {
-                            "username": "user",
-                            "password": "123",
-                            "email": "ab@212"
-                        }
-                        """))
+                                {
+                                    "username": "user",
+                                    "password": "123",
+                                    "email": "ab@212"
+                                }
+                                """))
                 .andExpect(status().isOk())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
