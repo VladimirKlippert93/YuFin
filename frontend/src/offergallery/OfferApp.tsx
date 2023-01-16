@@ -31,11 +31,16 @@ export default function OfferApp(props: OfferAppProps){
         setSearchText(searchText)
     }
 
+    function deleteOffer(id: string | undefined){
+        axios.delete("/api/offers/" + id)
+            .then(getOffers)
+    }
+
     return (
         <div>
             <h1>{props.user.username}</h1>
             <SearchBar handleSearchText={handleSearchText}/>
-            <OfferGallery offerList={filteredSearch}/>
+            <OfferGallery offerList={filteredSearch} user={props.user} deleteOffer={deleteOffer}/>
         </div>
     )
 }
