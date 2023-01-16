@@ -1,12 +1,12 @@
 package de.neuefische.backend.controller;
 
+import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.models.UserDTO;
 import de.neuefische.backend.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("api/users")
@@ -20,11 +20,8 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public String helloMe(Principal principal){
-        if(principal !=null){
-            return principal.getName();
-        }
-        return "anonymousUser";
+    public MongoUser helloMe(){
+        return userService.getUserByLogin();
     }
 
     @PostMapping("/login")
@@ -40,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserDTO addUser (@RequestBody UserDTO userDTO){
+    public MongoUser addUser (@RequestBody UserDTO userDTO){
         return userService.addUser(userDTO);
     }
 }
