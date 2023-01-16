@@ -45,15 +45,16 @@ class OfferControllerTest {
                 "help",
                 "money",
                 address,
-                "very good help"
+                "very good help",
+                "author"
         );
 
         Offer result = offerRepo.save(newOffer);
-        mockMvc.perform(get("/api/offers/"+result.id()))
+        mockMvc.perform(get("/api/offers/"+result._id()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                             {
-                            "id": "1",
+                            "_id": "1",
                             "title": "help",
                             "price": "money",
                             "address": {
@@ -64,8 +65,9 @@ class OfferControllerTest {
                             "zip":23,
                             "country":"country"
                             },
-                            "description": "very good help"
-                            }
+                            "description": "very good help",
+                            "author": "author"
+                            }\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040
                             """));
         }
 }
