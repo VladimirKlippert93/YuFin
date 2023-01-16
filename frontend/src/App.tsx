@@ -9,7 +9,7 @@ import AddOffer from "./offergallery/components/offers/AddOffer";
 
 export default function App() {
 
-    const {username, login, register} = useUser();
+    const {user, login, register} = useUser();
 
   return (
     <div className="App">
@@ -17,8 +17,8 @@ export default function App() {
         <BrowserRouter>
         <Routes>
             <Route path={"/offers/:id"} element={<OfferDetails/>}></Route>
-            <Route path={"/addoffer"} element={<AddOffer username={username}/>}></Route>
-            <Route path={"/"} element={<OfferApp/>}></Route>
+            <Route path={"/addoffer"} element={<AddOffer user={user}/>}></Route>
+            <Route path={"/"} element={<OfferApp user={user}/>}></Route>
             <Route path={"/login"} element={<LoginRegisterPage login={login} register={register}/>}/>
         </Routes>
         </BrowserRouter>
