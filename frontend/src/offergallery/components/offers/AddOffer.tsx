@@ -2,9 +2,10 @@ import {Offer} from "../models/Offer";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {Address} from "../models/Address";
 import axios from "axios";
+import {User} from "../models/User";
 
 type OfferProps = {
-    username: string
+    user: User
 }
 
 export default function AddOffer(props: OfferProps){
@@ -18,17 +19,28 @@ export default function AddOffer(props: OfferProps){
         "author": ""
     }
 
-    const [offer, setOffer] = useState<Offer>(emptyFormPlaceholder)
+    const emptyFormPlaceholderAddress: Address = {
+        "street": "",
+            "streetNumber": "",
+            "city": "",
+            "zip": 0,
+            "country": ""
+    }
 
-    const isAuthenticated: boolean = props.username !== 'anonymousUser' && props.username !== null && props.username !== undefined
+    const [offer, setOffer] = useState<Offer>(emptyFormPlaceholder)
+    const [address, setAddress] = useState<Address>(emptyFormPlaceholderAddress)
+
+
+    const isAuthenticated: boolean = props.user.username !== 'anonymousUser' && props.user.username !== null && props.user.username !== undefined
 
     function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault()
-        saveOffer(offer.title,offer.price,offer.address,offer.description,offer.author)
+        saveOffer(offer.title,offer.price,address,offer.description,props.user.username)
         setOffer(emptyFormPlaceholder)
+        setAddress(emptyFormPlaceholderAddress)
     }
     function saveOffer(title: string,price: string, address: Address, description: string, author: string){
-        return axios.post("api/addoffer",{
+        return axios.post("api/offers/addoffer",{
             "title": title,
             "price": price,
             "address": address,
@@ -47,6 +59,15 @@ export default function AddOffer(props: OfferProps){
             }))
     }
 
+    function handleChangeAddress(event: ChangeEvent<HTMLInputElement>){
+        const {name, value} = event.target
+
+        setAddress(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
     return (
         <div>{isAuthenticated ?
             <div>
@@ -61,15 +82,15 @@ export default function AddOffer(props: OfferProps){
                     </div>
                     <div>
                         <span>Address:</span>
-                        <input onChange={handleChange} type="text" placeholder="Street" value={offer.address.street}
+                        <input onChange={handleChangeAddress} type="text" placeholder="Street" value={address.street}
                                name={"street"}/>
-                        <input onChange={handleChange} type="text" placeholder="Streetnumber"
-                               value={offer.address.streetNumber} name={"streetnumber"}/>
-                        <input onChange={handleChange} type="text" placeholder="City" value={offer.address.city}
+                        <input onChange={handleChangeAddress} type="text" placeholder="Streetnumber"
+                               value={address.streetNumber} name={"streetNumber"}/>
+                        <input onChange={handleChangeAddress} type="text" placeholder="City" value={address.city}
                                name={"city"}/>
-                        <input onChange={handleChange} type="number" placeholder="Zip" value={offer.address.zip}
+                        <input onChange={handleChangeAddress} type="number" placeholder="Zip" value={address.zip}
                                name={"zip"}/>
-                        <input onChange={handleChange} type="text" placeholder="Country" value={offer.address.country}
+                        <input onChange={handleChangeAddress} type="text" placeholder="Country" value={address.country}
                                name={"country"}/>
                     </div>
                     <div>
