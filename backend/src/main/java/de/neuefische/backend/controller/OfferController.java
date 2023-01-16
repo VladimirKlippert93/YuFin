@@ -1,12 +1,12 @@
 package de.neuefische.backend.controller;
 
 import de.neuefische.backend.models.Offer;
+import de.neuefische.backend.models.OfferDTO;
 import de.neuefische.backend.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/offers")
@@ -23,11 +23,11 @@ public class OfferController {
         return offerService.getAllOffers();
     }
     @GetMapping("/{id}")
-    public Optional<Offer> getOfferById(@PathVariable String id){
+    public Offer getOfferById(@PathVariable String id){
         return offerService.getOfferById(id);
     }
-    @PostMapping
-    public Offer addOffer(@RequestBody Offer offer){
+    @PostMapping("/addoffer")
+    public Offer addOffer(@RequestBody OfferDTO offer){
         return offerService.saveOffer(offer);
     }
 }
