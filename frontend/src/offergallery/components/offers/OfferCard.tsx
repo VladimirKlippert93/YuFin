@@ -10,7 +10,7 @@ export default function OfferCard(props: OfferCardProps){
     const navigate = useNavigate()
 
     function handleDetailsClick(){
-        navigate("/offers/" + props.offer.id)
+        navigate("/offers/" + props.offer._id)
     }
 
     return(
