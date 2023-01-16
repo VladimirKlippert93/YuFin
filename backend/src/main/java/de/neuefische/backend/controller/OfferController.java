@@ -22,12 +22,19 @@ public class OfferController {
     public List<Offer> getAllOffers(){
         return offerService.getAllOffers();
     }
+
     @GetMapping("/{id}")
     public Offer getOfferById(@PathVariable String id){
         return offerService.getOfferById(id);
     }
+
     @PostMapping("/addoffer")
     public Offer addOffer(@RequestBody OfferDTO offer){
         return offerService.saveOffer(offer);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOffer(@PathVariable String id){
+        offerService.deleteById(id);
     }
 }
