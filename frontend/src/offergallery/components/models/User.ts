@@ -1,6 +1,8 @@
 import {Offer} from "./Offer";
 
 export type User = {
-    name: string,
-    offers: Offer[]
+    username: string,
+    password: string,
+    email: string,
+    offerList: Offer[]
 }
