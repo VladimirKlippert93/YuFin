@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,4 +71,27 @@ class OfferControllerTest {
                             }\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040
                             """));
         }
+
+    @Test
+    @DirtiesContext
+    void deleteOfferById() throws Exception {
+        Address address = new Address(
+                "3",
+                "street",
+                "streetnumber",
+                "city",
+                23,
+                "country");
+
+        Offer offer = new Offer(
+                "1",
+                "title",
+                "price",
+                address,
+                "description",
+                "author");
+
+        mockMvc.perform(delete("/api/offers/" + offer._id()).with(csrf()))
+                .andExpect(status().isOk());
+    }
 }
