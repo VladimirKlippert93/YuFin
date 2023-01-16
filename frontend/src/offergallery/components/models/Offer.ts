@@ -1,7 +1,7 @@
 import {Address} from "./Address";
 
 export type Offer = {
-    id?: string,
+    _id?: string,
     title: string,
     price: string,
     address: Address,
