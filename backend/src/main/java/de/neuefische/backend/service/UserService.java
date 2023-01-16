@@ -3,6 +3,7 @@ package de.neuefische.backend.service;
 import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.models.UserDTO;
 import de.neuefische.backend.security.MongoUserRepo;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -25,16 +28,23 @@ public class UserService implements UserDetailsService {
         this.argon2Service = argon2Service;
     }
 
-    public UserDTO addUser (UserDTO user){
-        UserDTO newUser = new UserDTO(user.username(), argon2Service.encode(user.password()),user.email(), new ArrayList<>());
+    public MongoUser addUser (UserDTO user){
+        MongoUser newUser = new MongoUser(user.username(), argon2Service.encode(user.password()),user.email(), new ArrayList<>());
         mongoUserRepo.save(newUser);
 
-        return new UserDTO(
+        return new MongoUser(
                 newUser.username(),
                 "****",
                 newUser.email(),
                 newUser.offerList()
         );
+    }
+
+    public MongoUser getUserByLogin(){
+        Optional<MongoUser> userBySecurity = mongoUserRepo.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        return userBySecurity.flatMap(user -> userBySecurity)
+                .orElse(new MongoUser("unknown User","","", Collections.emptyList()));
     }
 
     @Override
