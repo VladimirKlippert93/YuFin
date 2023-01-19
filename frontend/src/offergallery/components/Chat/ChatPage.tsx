@@ -26,7 +26,7 @@ export default function ChatPage(props: ChatPageProps) {
         return () => {
             ws.close();
         };
-    }, [props.senderUsername, props.receiverUsername]);
+    }, [navigate, props.senderUsername, props.receiverUsername]);
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
