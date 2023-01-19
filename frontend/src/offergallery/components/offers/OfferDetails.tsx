@@ -1,10 +1,11 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Offer} from "../models/Offer";
 import axios from "axios";
 
 export default function OfferDetails(){
 
+    const navigate = useNavigate();
     const param = useParams()
     const [offer, setOffer] = useState<Offer>()
 
@@ -15,6 +16,11 @@ export default function OfferDetails(){
         getOfferById(id)
         }
     },[id])
+
+
+    const handleChatButtonClick = () => {
+        navigate('/chat/'+param.username+"/"+param.username, { state: { senderUsername: param.username, receiverUsername: param.username } });
+    }
 
     function getOfferById(id: string){
         axios.get("/api/offers/"+id)
@@ -39,6 +45,7 @@ export default function OfferDetails(){
                         <p>{offer.address.zip}</p>
                         <p>{offer.address.street}</p>
                     </div>
+                    <button onClick={handleChatButtonClick}>Start Chat</button>
                 </div>
             }
         </div>
