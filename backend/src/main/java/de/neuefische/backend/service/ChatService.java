@@ -9,10 +9,9 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.socket.CloseStatus;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ChatService extends TextWebSocketHandler{
@@ -30,14 +29,31 @@ public class ChatService extends TextWebSocketHandler{
         return chatRepo.save(message);
     }
 
-    public List<ChatMessage> getMessages(String senderUsername, String receiverUsername) {
-        return chatRepo.findAllBySenderUsernameAndReceiverUsername(senderUsername, receiverUsername);
+    public List<ChatMessage> getPreviousMessages(String senderUsername, String receiverUsername){
+        return chatRepo.findAllBySenderUsernameOrReceiverUsername(senderUsername,receiverUsername);
+    }
+    public void sendPreviousMessages(WebSocketSession session, String senderUsername, String receiverUsername){
+        List<ChatMessage> messages = getPreviousMessages(senderUsername,receiverUsername);
+        messages.addAll(getPreviousMessages(receiverUsername,senderUsername));
+        messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
+        for (ChatMessage message: messages){
+            try{
+                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         sessions.add(session);
+        String senderUsername = session.getPrincipal().getName();
+        ChatMessage lastChatMessage = chatRepo.findFirstBySenderUsernameOrderByTimestampDesc(senderUsername);
+        if (lastChatMessage != null){
+            sendPreviousMessages(session,senderUsername, lastChatMessage.getReceiverUsername());
+        }
     }
 
     @Override
@@ -47,7 +63,7 @@ public class ChatService extends TextWebSocketHandler{
         ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
         chatMessage.setSenderUsername(session.getPrincipal().getName());
         chatMessage.setTimestamp(LocalDateTime.now());
-        chatMessage.setId("13409");
+        chatMessage.setId(UUID.randomUUID().toString());
 
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage));
 
@@ -66,6 +82,7 @@ public class ChatService extends TextWebSocketHandler{
             }
         }
         session.sendMessage(textMessage);
+        saveMessage(chatMessage);
     }
 
     @Override
