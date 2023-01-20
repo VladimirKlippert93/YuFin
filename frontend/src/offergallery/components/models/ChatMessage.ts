@@ -5,3 +5,8 @@ export interface ChatMessage{
     message: string
     timestamp: Date
 }
+
+export interface NewChatMessage{
+    receiverUsername: string
+    message: string
+}
