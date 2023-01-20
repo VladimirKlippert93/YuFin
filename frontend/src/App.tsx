@@ -19,12 +19,11 @@ export default function App() {
 
         <BrowserRouter>
         <Routes>
-            <Route path={"/offers/:id"} element={<OfferDetails/>}></Route>
+            <Route path={"/offers/:id"} element={<OfferDetails user={user}/>}></Route>
             <Route path={"/addoffer"} element={<AddOffer user={user}/>}></Route>
             <Route path={"/"} element={<OfferApp user={user}/>}></Route>
             <Route path={"/login"} element={<LoginRegisterPage login={login} register={register}/>}/>
-            <Route path={"/chat/:senderUsername/:receiverUsername"} element={<ChatPage senderUsername={user.username} receiverUsername={user.username}/>}/>
-
+            <Route path="/chat/:receiverUsername" element={<ChatPage/>} />
         </Routes>
         </BrowserRouter>
     </div>
