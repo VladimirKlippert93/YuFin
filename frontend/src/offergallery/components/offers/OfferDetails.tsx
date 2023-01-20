@@ -19,7 +19,9 @@ export default function OfferDetails(){
 
 
     const handleChatButtonClick = () => {
-        navigate('/chat/'+param.username+"/"+param.username, { state: { senderUsername: param.username, receiverUsername: param.username } });
+        if (offer) {
+            navigate(`/chat/${offer.author}`);
+        }
     }
 
     function getOfferById(id: string){
@@ -50,5 +52,4 @@ export default function OfferDetails(){
             }
         </div>
     )
-
 }
