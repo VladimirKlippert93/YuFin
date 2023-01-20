@@ -19,7 +19,7 @@ export default function App() {
 
         <BrowserRouter>
         <Routes>
-            <Route path={"/offers/:id"} element={<OfferDetails user={user}/>}></Route>
+            <Route path={"/offers/:id"} element={<OfferDetails/>}></Route>
             <Route path={"/addoffer"} element={<AddOffer user={user}/>}></Route>
             <Route path={"/"} element={<OfferApp user={user}/>}></Route>
             <Route path={"/login"} element={<LoginRegisterPage login={login} register={register}/>}/>
