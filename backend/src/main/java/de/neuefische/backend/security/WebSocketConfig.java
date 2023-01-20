@@ -1,23 +1,23 @@
 package de.neuefische.backend.security;
 
+import de.neuefische.backend.service.ChatService;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+@EnableWebSocket
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws/{senderUsername}/{receiverUsername}")
-                .setAllowedOrigins("*")
-                .withSockJS();
+public class WebSocketConfig implements WebSocketConfigurer  {
+
+    private final ChatService chatService;
+
+    public WebSocketConfig(ChatService chatService) {
+        this.chatService = chatService;
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app")
-                .enableSimpleBroker("/topic");
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(chatService, "/api/ws/chat")
+                .setAllowedOrigins("*");
     }
 }
