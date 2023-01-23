@@ -14,6 +14,13 @@ public class ChatMessage {
     private String message;
     private LocalDateTime timestamp;
 
+    public ChatMessage(String senderUsername, String receiverUsername, String message, LocalDateTime timestamp) {
+        this.senderUsername = senderUsername;
+        this.receiverUsername = receiverUsername;
+        this.message = message;
+        this.timestamp = timestamp;
+    }
+
     public String getId() {
         return id;
     }
@@ -22,28 +29,12 @@ public class ChatMessage {
         this.id = id;
     }
 
-    public String getSenderUsername() {
-        return senderUsername;
-    }
-
     public void setSenderUsername(String senderUsername) {
         this.senderUsername = senderUsername;
     }
 
     public String getReceiverUsername() {
         return receiverUsername;
-    }
-
-    public void setReceiverUsername(String receiverUsername) {
-        this.receiverUsername = receiverUsername;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public LocalDateTime getTimestamp() {
