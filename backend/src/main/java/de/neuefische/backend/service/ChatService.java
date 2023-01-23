@@ -47,7 +47,7 @@ public class ChatService extends TextWebSocketHandler{
         super.afterConnectionEstablished(session);
         sessions.add(session);
 
-            String senderUsername = Objects.requireNonNull(session.getPrincipal().getName());
+            String senderUsername = Objects.requireNonNull(session.getPrincipal()).getName();
             ChatMessage lastChatMessage = chatRepo.findFirstBySenderUsernameOrderByTimestampDesc(senderUsername);
             if (lastChatMessage != null) {
                 sendPreviousMessages(session, senderUsername, lastChatMessage.getReceiverUsername());
@@ -60,14 +60,14 @@ public class ChatService extends TextWebSocketHandler{
         super.handleTextMessage(session, message);
 
         ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
-        chatMessage.setSenderUsername(Objects.requireNonNull(session.getPrincipal().getName()));
+        chatMessage.setSenderUsername(Objects.requireNonNull(session.getPrincipal()).getName());
         chatMessage.setTimestamp(LocalDateTime.now());
         chatMessage.setId(UUID.randomUUID().toString());
 
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage));
 
         for (WebSocketSession sessionFromSessions : sessions) {
-            if (sessionFromSessions.getPrincipal() != null && Objects.requireNonNull(sessionFromSessions.getPrincipal().getName().equals(chatMessage.getReceiverUsername()))) {
+            if (sessionFromSessions.getPrincipal() != null && Objects.requireNonNull(sessionFromSessions.getPrincipal()).getName().equals(chatMessage.getReceiverUsername())) {
                     try {
                         sessionFromSessions.sendMessage(textMessage);
 
