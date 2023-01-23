@@ -6,10 +6,7 @@ import de.neuefische.backend.repository.ChatRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -32,6 +29,7 @@ class ChatServiceTest {
     private WebSocketSession session;
     @InjectMocks
     private ChatService chatService;
+
     @Captor
     private ArgumentCaptor<TextMessage> textMessageCaptor;
 
@@ -118,4 +116,34 @@ class ChatServiceTest {
         // then
         assertEquals(String.class, chatMessage.getId().getClass());
     }
+
+    @Test
+    void afterConnectionEstablished_shouldAddSessionToSessions() throws Exception {
+        // given
+        when(session.getPrincipal()).thenReturn(() -> "sender");
+        ChatMessage lastChatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
+        when(chatRepo.findFirstBySenderUsernameOrderByTimestampDesc("sender")).thenReturn(lastChatMessage);
+
+        // when
+        chatService.afterConnectionEstablished(session);
+
+        // then
+        assertTrue(chatService.getSessions().contains(session));
+    }
+
+    @Test
+    void afterConnectionEstablished_shouldSendPreviousMessages() throws Exception {
+        // given
+        ChatService chatServiceSpy = spy(chatService);
+        when(session.getPrincipal()).thenReturn(() -> "sender");
+        ChatMessage lastChatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
+        when(chatRepo.findFirstBySenderUsernameOrderByTimestampDesc("sender")).thenReturn(lastChatMessage);
+
+        // when
+        chatServiceSpy.afterConnectionEstablished(session);
+
+        // then
+        verify(chatRepo, times(1)).findFirstBySenderUsernameOrderByTimestampDesc("sender");
+        verify(chatServiceSpy, times(1)).sendPreviousMessages(session, "sender", "receiver");
+        }
 }

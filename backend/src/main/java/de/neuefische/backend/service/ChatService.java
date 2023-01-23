@@ -25,6 +25,10 @@ public class ChatService extends TextWebSocketHandler{
         this.objectMapper = objectMapper;
     }
 
+    public Set<WebSocketSession> getSessions() {
+        return sessions;
+    }
+
     public ChatMessage saveMessage(ChatMessage message) {
         return chatRepo.save(message);
     }
@@ -52,7 +56,6 @@ public class ChatService extends TextWebSocketHandler{
             if (lastChatMessage != null) {
                 sendPreviousMessages(session, senderUsername, lastChatMessage.getReceiverUsername());
             }
-
     }
 
     @Override
