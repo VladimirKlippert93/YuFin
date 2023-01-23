@@ -29,17 +29,14 @@ public class ChatService extends TextWebSocketHandler{
         return chatRepo.save(message);
     }
 
-    public List<ChatMessage> getPreviousMessages(String senderUsername, String receiverUsername){
-        return chatRepo.findAllBySenderUsernameOrReceiverUsername(senderUsername,receiverUsername);
-    }
-    public void sendPreviousMessages(WebSocketSession session, String senderUsername, String receiverUsername){
-        List<ChatMessage> messages = getPreviousMessages(senderUsername,receiverUsername);
-        messages.addAll(getPreviousMessages(receiverUsername,senderUsername));
+    public void sendPreviousMessages(WebSocketSession session, String senderUsername, String receiverUsername) {
+        List<ChatMessage> messages = chatRepo.findAllBySenderUsernameAndReceiverUsername(senderUsername, receiverUsername);
+        messages.addAll(chatRepo.findAllBySenderUsernameAndReceiverUsername(receiverUsername, senderUsername));
         messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
-        for (ChatMessage message: messages){
-            try{
+        for (ChatMessage message : messages) {
+            try {
                 session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -49,11 +46,13 @@ public class ChatService extends TextWebSocketHandler{
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         sessions.add(session);
-        String senderUsername = session.getPrincipal().getName();
-        ChatMessage lastChatMessage = chatRepo.findFirstBySenderUsernameOrderByTimestampDesc(senderUsername);
-        if (lastChatMessage != null){
-            sendPreviousMessages(session,senderUsername, lastChatMessage.getReceiverUsername());
-        }
+
+            String senderUsername = Objects.requireNonNull(session.getPrincipal().getName());
+            ChatMessage lastChatMessage = chatRepo.findFirstBySenderUsernameOrderByTimestampDesc(senderUsername);
+            if (lastChatMessage != null) {
+                sendPreviousMessages(session, senderUsername, lastChatMessage.getReceiverUsername());
+            }
+
     }
 
     @Override
@@ -61,24 +60,20 @@ public class ChatService extends TextWebSocketHandler{
         super.handleTextMessage(session, message);
 
         ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
-        chatMessage.setSenderUsername(session.getPrincipal().getName());
+        chatMessage.setSenderUsername(Objects.requireNonNull(session.getPrincipal().getName()));
         chatMessage.setTimestamp(LocalDateTime.now());
         chatMessage.setId(UUID.randomUUID().toString());
 
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage));
 
-        for (WebSocketSession s : sessions) {
-            if (s.getPrincipal() != null) {
-
-                if (s.getPrincipal().getName().equals(chatMessage.getReceiverUsername())) {
+        for (WebSocketSession sessionFromSessions : sessions) {
+            if (sessionFromSessions.getPrincipal() != null && Objects.requireNonNull(sessionFromSessions.getPrincipal().getName().equals(chatMessage.getReceiverUsername()))) {
                     try {
-
-                        s.sendMessage(textMessage);
+                        sessionFromSessions.sendMessage(textMessage);
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
             }
         }
         session.sendMessage(textMessage);
