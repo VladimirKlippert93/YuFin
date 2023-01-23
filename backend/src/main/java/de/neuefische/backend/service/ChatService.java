@@ -33,15 +33,15 @@ public class ChatService extends TextWebSocketHandler{
         return chatRepo.save(message);
     }
 
-    public void sendPreviousMessages(WebSocketSession session, String senderUsername, String receiverUsername) {
+    public void sendPreviousMessages(WebSocketSession session, String senderUsername, String receiverUsername) throws IOException {
         List<ChatMessage> messages = chatRepo.findAllBySenderUsernameAndReceiverUsername(senderUsername, receiverUsername);
         messages.addAll(chatRepo.findAllBySenderUsernameAndReceiverUsername(receiverUsername, senderUsername));
         messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
         for (ChatMessage message : messages) {
             try {
                 session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                session.sendMessage(new TextMessage("An error occurred while processing."));
             }
         }
     }
@@ -75,7 +75,7 @@ public class ChatService extends TextWebSocketHandler{
                         sessionFromSessions.sendMessage(textMessage);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+                       session.sendMessage(new TextMessage("An error occurred while processing."));
                     }
             }
         }
