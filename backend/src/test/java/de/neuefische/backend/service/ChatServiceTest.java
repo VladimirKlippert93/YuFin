@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -74,30 +75,30 @@ class ChatServiceTest {
 
     @Test
     void handleTextMessage_shouldSaveMessageInRepo() throws Exception {
-        // given
+
         ChatMessage chatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
         when(objectMapper.readValue(anyString(), eq(ChatMessage.class))).thenReturn(chatMessage);
         when(session.getPrincipal()).thenReturn(() -> "sender");
         when(objectMapper.writeValueAsString(chatMessage)).thenReturn("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}");
 
-        // when
+
         chatService.handleTextMessage(session, new TextMessage("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}"));
 
-        // then
+
         verify(chatRepo, times(1)).save(chatMessage);
     }
 
     @Test
     void handleTextMessage_shouldSendMessageToReceiver() throws Exception {
-        // given
+
         ChatMessage chatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
         when(objectMapper.readValue(anyString(), eq(ChatMessage.class))).thenReturn(chatMessage);
         when(session.getPrincipal()).thenReturn(() -> "sender");
         when(objectMapper.writeValueAsString(chatMessage)).thenReturn("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}");
-        // when
+
         chatService.handleTextMessage(session, new TextMessage("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}"));
 
-        // then
+
         verify(session, times(1)).sendMessage(textMessageCaptor.capture());
         TextMessage sentTextMessage = textMessageCaptor.getValue();
         assertEquals("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}", sentTextMessage.getPayload());
@@ -105,45 +106,53 @@ class ChatServiceTest {
 
     @Test
     void handleTextMessage_shouldSetId() throws Exception {
-        // given
+
         ChatMessage chatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
         when(objectMapper.readValue(anyString(), eq(ChatMessage.class))).thenReturn(chatMessage);
         when(session.getPrincipal()).thenReturn(() -> "sender");
         when(objectMapper.writeValueAsString(chatMessage)).thenReturn("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}");
-        // when
+
         chatService.handleTextMessage(session, new TextMessage("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}"));
 
-        // then
+
         assertEquals(String.class, chatMessage.getId().getClass());
     }
 
     @Test
     void afterConnectionEstablished_shouldAddSessionToSessions() throws Exception {
-        // given
+
         when(session.getPrincipal()).thenReturn(() -> "sender");
         ChatMessage lastChatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
         when(chatRepo.findFirstBySenderUsernameOrderByTimestampDesc("sender")).thenReturn(lastChatMessage);
 
-        // when
         chatService.afterConnectionEstablished(session);
 
-        // then
         assertTrue(chatService.getSessions().contains(session));
     }
 
     @Test
     void afterConnectionEstablished_shouldSendPreviousMessages() throws Exception {
-        // given
+
         ChatService chatServiceSpy = spy(chatService);
         when(session.getPrincipal()).thenReturn(() -> "sender");
         ChatMessage lastChatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
         when(chatRepo.findFirstBySenderUsernameOrderByTimestampDesc("sender")).thenReturn(lastChatMessage);
 
-        // when
         chatServiceSpy.afterConnectionEstablished(session);
 
-        // then
         verify(chatRepo, times(1)).findFirstBySenderUsernameOrderByTimestampDesc("sender");
         verify(chatServiceSpy, times(1)).sendPreviousMessages(session, "sender", "receiver");
+        }
+
+        @Test
+        void afterConnectionClosed_shouldRemoveSessionFromSessions() throws Exception {
+
+            WebSocketSession session = mock(WebSocketSession.class);
+            CloseStatus status = new CloseStatus(1000, "reason");
+            chatService.getSessions().add(session);
+
+            chatService.afterConnectionClosed(session, status);
+
+            assertFalse(chatService.getSessions().contains(session));
         }
 }
