@@ -41,7 +41,12 @@ class ChatServiceTest {
 
     @Test
     void saveMessageTest() {
-        ChatMessage message = new ChatMessage("sender", "receiver", "Hello, how are you?", LocalDateTime.now());
+        ChatMessage message = ChatMessage.builder()
+                .senderUsername("sender")
+                .receiverUsername("receiver")
+                .message("Hello")
+                .timestamp(LocalDateTime.now())
+                .build();
         when(chatRepo.save(message)).thenReturn(message);
 
         ChatMessage savedMessage = chatService.saveMessage(message);
@@ -53,8 +58,18 @@ class ChatServiceTest {
     @Test
     void sendPreviousMessagesTest() throws Exception {
         List<ChatMessage> messages = Arrays.asList(
-                new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now()),
-                new ChatMessage("receiver", "sender", "Hi", LocalDateTime.now())
+                ChatMessage.builder()
+                        .senderUsername("sender")
+                        .receiverUsername("receiver")
+                        .message("Hello")
+                        .timestamp(LocalDateTime.now())
+                        .build(),
+                ChatMessage.builder()
+                        .senderUsername("receiver")
+                        .receiverUsername("sender")
+                        .message("Hi")
+                        .timestamp(LocalDateTime.now())
+                        .build()
         );
         lenient().when(session.getPrincipal()).thenReturn(() -> "sender");
         when(objectMapper.writeValueAsString(messages.get(0))).thenReturn("{\"sender\":\"sender\",\"receiver\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"" + messages.get(0).getTimestamp() + "\"}");
@@ -76,7 +91,12 @@ class ChatServiceTest {
     @Test
     void handleTextMessage_shouldSaveMessageInRepo() throws Exception {
 
-        ChatMessage chatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
+        ChatMessage chatMessage = ChatMessage.builder()
+                .senderUsername("sender")
+                .receiverUsername("receiver")
+                .message("Hello")
+                .timestamp(LocalDateTime.now())
+                .build();
         when(objectMapper.readValue(anyString(), eq(ChatMessage.class))).thenReturn(chatMessage);
         when(session.getPrincipal()).thenReturn(() -> "sender");
         when(objectMapper.writeValueAsString(chatMessage)).thenReturn("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}");
@@ -91,7 +111,12 @@ class ChatServiceTest {
     @Test
     void handleTextMessage_shouldSendMessageToReceiver() throws Exception {
 
-        ChatMessage chatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
+        ChatMessage chatMessage = ChatMessage.builder()
+                .senderUsername("sender")
+                .receiverUsername("receiver")
+                .message("Hello")
+                .timestamp(LocalDateTime.now())
+                .build();
         when(objectMapper.readValue(anyString(), eq(ChatMessage.class))).thenReturn(chatMessage);
         when(session.getPrincipal()).thenReturn(() -> "sender");
         when(objectMapper.writeValueAsString(chatMessage)).thenReturn("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}");
@@ -107,7 +132,12 @@ class ChatServiceTest {
     @Test
     void handleTextMessage_shouldSetId() throws Exception {
 
-        ChatMessage chatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
+        ChatMessage chatMessage = ChatMessage.builder()
+                .senderUsername("sender")
+                .receiverUsername("receiver")
+                .message("Hello")
+                .timestamp(LocalDateTime.now())
+                .build();
         when(objectMapper.readValue(anyString(), eq(ChatMessage.class))).thenReturn(chatMessage);
         when(session.getPrincipal()).thenReturn(() -> "sender");
         when(objectMapper.writeValueAsString(chatMessage)).thenReturn("{\"senderUsername\":\"sender\",\"receiverUsername\":\"receiver\",\"message\":\"Hello\",\"timestamp\":\"2022-01-23T10:15:30\"}");
@@ -122,7 +152,12 @@ class ChatServiceTest {
     void afterConnectionEstablished_shouldAddSessionToSessions() throws Exception {
 
         when(session.getPrincipal()).thenReturn(() -> "sender");
-        ChatMessage lastChatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
+        ChatMessage lastChatMessage = ChatMessage.builder()
+                .senderUsername("sender")
+                .receiverUsername("receiver")
+                .message("Hello")
+                .timestamp(LocalDateTime.now())
+                .build();
         when(chatRepo.findFirstBySenderUsernameOrderByTimestampDesc("sender")).thenReturn(lastChatMessage);
 
         chatService.afterConnectionEstablished(session);
@@ -135,7 +170,12 @@ class ChatServiceTest {
 
         ChatService chatServiceSpy = spy(chatService);
         when(session.getPrincipal()).thenReturn(() -> "sender");
-        ChatMessage lastChatMessage = new ChatMessage("sender", "receiver", "Hello", LocalDateTime.now());
+        ChatMessage lastChatMessage = ChatMessage.builder()
+                .senderUsername("sender")
+                .receiverUsername("receiver")
+                .message("Hello")
+                .timestamp(LocalDateTime.now())
+                .build();
         when(chatRepo.findFirstBySenderUsernameOrderByTimestampDesc("sender")).thenReturn(lastChatMessage);
 
         chatServiceSpy.afterConnectionEstablished(session);
