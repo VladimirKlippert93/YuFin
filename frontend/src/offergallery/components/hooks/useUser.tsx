@@ -17,7 +17,7 @@ export default function useUser(){
         axios.get("/api/users/me")
             .then(result => result.data)
             .then(data => setUser(data))
-    },[])
+    },[user])
 
     function login(username: string, password: string){
         return axios.post("/api/users/login", undefined, {
@@ -37,7 +37,7 @@ export default function useUser(){
         return axios.post("/api/users/logout")
             .then((result) => result.data)
             .then((data) => {
-                setUser(data)
+                setUser(emptyUser)
                 return data
             })
     }
