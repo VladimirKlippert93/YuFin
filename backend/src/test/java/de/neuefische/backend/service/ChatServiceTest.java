@@ -13,6 +13,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -183,16 +184,31 @@ class ChatServiceTest {
         verify(chatRepo, times(1)).findFirstBySenderUsernameOrderByTimestampDesc("sender");
         verify(chatServiceSpy, times(1)).sendPreviousMessages(session, "sender", "receiver");
         }
+    @Test
+    void afterConnectionClosed_shouldRemoveSessionFromSessions() throws Exception {
 
-        @Test
-        void afterConnectionClosed_shouldRemoveSessionFromSessions() throws Exception {
+        WebSocketSession session = mock(WebSocketSession.class);
+        CloseStatus status = new CloseStatus(1000, "reason");
+        chatService.getSessions().add(session);
 
-            WebSocketSession session = mock(WebSocketSession.class);
-            CloseStatus status = new CloseStatus(1000, "reason");
-            chatService.getSessions().add(session);
+        chatService.afterConnectionClosed(session, status);
 
-            chatService.afterConnectionClosed(session, status);
+        assertFalse(chatService.getSessions().contains(session));
+    }
 
-            assertFalse(chatService.getSessions().contains(session));
-        }
+    @Test
+    void getPreviousMessages_shouldReturnSortedListOfPreviousMessages() {
+
+        ChatMessage message1 = ChatMessage.builder().id("1").senderUsername("sender1").receiverUsername("receiver1").message("message1").timestamp(LocalDateTime.of(2020, 1, 1, 0, 0, 0)).build();
+        ChatMessage message2 = ChatMessage.builder().id("2").senderUsername("receiver1").receiverUsername("sender1").message("message2").timestamp(LocalDateTime.of(2021, 1, 2, 0, 9, 0)).build();
+        List<ChatMessage> messageList = new ArrayList<>(Arrays.asList(message1, message2));
+        when(chatRepo.findAllBySenderUsernameAndReceiverUsername(anyString(), anyString())).thenReturn(messageList);
+
+        List<ChatMessage> previousMessages = chatService.getPreviousMessages("sender1", "receiver1");
+
+        assertEquals(4, previousMessages.size());
+        assertTrue(previousMessages.get(0).getTimestamp().isBefore(previousMessages.get(previousMessages.size()-1).getTimestamp()));
+        verify(chatRepo).findAllBySenderUsernameAndReceiverUsername("sender1", "receiver1");
+        verify(chatRepo).findAllBySenderUsernameAndReceiverUsername("receiver1", "sender1");
+    }
 }
