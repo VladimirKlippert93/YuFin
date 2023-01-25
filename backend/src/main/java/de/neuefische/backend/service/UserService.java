@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
         Optional<MongoUser> userBySecurity = mongoUserRepo.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
         return userBySecurity.flatMap(user -> userBySecurity)
-                .orElse(new MongoUser("unknown User","","", Collections.emptyList()));
+                .orElse(new MongoUser("anonymousUser","","", Collections.emptyList()));
     }
 
     @Override
@@ -52,5 +52,8 @@ public class UserService implements UserDetailsService {
         MongoUser mongoUser = mongoUserRepo.findByUsername(name)
                 .orElseThrow(()->new UsernameNotFoundException("User not found!"));
         return new User(mongoUser.username(), mongoUser.password(), List.of());
+    }
+    public List<MongoUser> getAllUsers() {
+        return mongoUserRepo.findAll();
     }
 }
