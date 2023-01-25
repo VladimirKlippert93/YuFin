@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
@@ -39,5 +40,10 @@ public class UserController {
     @PostMapping("/register")
     public MongoUser addUser (@RequestBody UserDTO userDTO){
         return userService.addUser(userDTO);
+    }
+
+    @GetMapping("/all")
+    public List<MongoUser> getAllUsers(){
+        return userService.getAllUsers();
     }
 }
