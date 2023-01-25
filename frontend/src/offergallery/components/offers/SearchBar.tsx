@@ -10,8 +10,8 @@ export default function SearchBar(props: SearchBarProps){
     }
 
     return (
-        <div>
-            <input type="text" placeholder="Search for something..." onChange={handleOnChangeSearchText}/>
+        <div className="searchbar">
+            <input className="searchbar_input" type="text" placeholder="Search for something..." onChange={handleOnChangeSearchText}/>
         </div>
     )
 }
