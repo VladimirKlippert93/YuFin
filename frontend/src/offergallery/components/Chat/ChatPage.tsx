@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {ChatMessage, NewChatMessage} from "../models/ChatMessage";
+import useUser from "../hooks/useUser";
+import axios from 'axios';
 
 
 export default function ChatPage() {
@@ -8,35 +10,49 @@ export default function ChatPage() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [message, setMessage] = useState('');
     const [ws, setWs] = useState<WebSocket | null>(null);
-    const { senderUsername, receiverUsername } = useParams<{ senderUsername: string, receiverUsername: string }>();
+    const { receiverUsername } = useParams<{receiverUsername: string }>();
+    const {user} = useUser();
+    const {username: senderUsername} = user;
 
-    console.log(messages);
+
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8080/api/ws/chat`);
-        setWs(ws);
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log(event);
-            setMessages((prevMessages) => [...prevMessages, data]);
-        };
+        axios.get<ChatMessage[]>(`/api/chat/previous-messages?senderUsername=${senderUsername}&receiverUsername=${receiverUsername}`)
+            .then((res) => {
+                setMessages(res.data);
+            })
+            .catch((error) => console.log(error));
+
+            const ws = new WebSocket(`ws://localhost:8080/api/ws/chat`);
+            setWs(ws);
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.senderUsername === senderUsername && data.receiverUsername === receiverUsername) {
+                    setMessages((prevMessages) => [...prevMessages, data]);
+                }
+            };
+            ws.onclose = () =>{
+                setMessages([]);
+            };
 
         return () => {
-            ws.close();
+            if (ws) {
+                ws.close();
+            }
         };
     }, [senderUsername, receiverUsername]);
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (receiverUsername !== undefined) {
+        if (receiverUsername !== undefined && senderUsername !== undefined && ws && ws.readyState === WebSocket.OPEN) {
 
             const newChatMessage: NewChatMessage = {
-                receiverUsername: receiverUsername,
-                message,
+                senderUsername,
+                receiverUsername,
+                message
             };
-            if (ws) {
                 ws.send(JSON.stringify(newChatMessage));
-            }
             setMessage('');
         }
     };
