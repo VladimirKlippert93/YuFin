@@ -38,7 +38,6 @@ export default function OfferApp(props: OfferAppProps){
 
     return (
         <div>
-            <h1>{props.user.username}</h1>
             <SearchBar handleSearchText={handleSearchText}/>
             <OfferGallery offerList={filteredSearch} user={props.user} deleteOffer={deleteOffer}/>
         </div>
