@@ -15,7 +15,7 @@ export default function OfferGallery(props: OfferGalleryProps){
     })
 
     return(
-        <div>
+        <div className="offer-gallery">
             {offerComponents}
         </div>
     )
