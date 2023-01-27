@@ -1,0 +1,12 @@
+.offercard{
+    margin: 5px;
+    border: 1px solid #0e67b4;
+}
+.offercard_offer_title{
+    text-align: left;
+    padding-left: 15px;
+}
+.offercard_offer_price, .offercard_offer_city{
+    text-align: left;
+    padding-left: 35px;
+}
