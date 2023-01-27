@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {User} from "../models/User";
+import "../../../styles/components/chat/ChatOverview.css"
 
 export default function ChatOverview() {
     const [users, setUsers] = useState<string[]>([]);
