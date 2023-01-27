@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import {ChatMessage, NewChatMessage} from "../models/ChatMessage";
 import useUser from "../hooks/useUser";
 import axios from 'axios';
+import "../../../styles/components/chat/ChatPage.css"
 
 
 export default function ChatPage() {
