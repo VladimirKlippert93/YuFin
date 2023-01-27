@@ -2,6 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Offer} from "../models/Offer";
 import axios from "axios";
+import "../../../styles/components/offers/OfferDetails.css"
 
 export default function OfferDetails(){
 
@@ -35,19 +36,20 @@ export default function OfferDetails(){
 
     return(
         <div>
-            {!offer && <p>loading files...</p>}
+            {!offer && <p className="loading-message">loading files...</p>}
             {offer &&
-                <div>
-                    <div>
-                        <h2>{offer.title}</h2>
-                        <hr/>
-                        <p>{offer.price}</p>
-                        <p>{offer.description}</p>
-                        <p>{offer.address.city}</p>
-                        <p>{offer.address.zip}</p>
-                        <p>{offer.address.street}</p>
+                <div className="offer-card">
+                    <div className="offer-card_content">
+                        <h2 className="offer-card_title">{offer.title}</h2>
+                        <p className="offer-card_price">{offer.price}</p>
+                        <p className="offer-card_description">{offer.description}</p>
+                        <p className="offer-card_city">{offer.address.city}</p>
+                        <p className="offer-card_zip">{offer.address.zip}</p>
+                        <p className="offer-card_street">{offer.address.street}</p>
                     </div>
-                    <button onClick={handleChatButtonClick}>Start Chat</button>
+                    <div  className="offer-card_chat-button-box">
+                    <button className="offer-card_chat-button" onClick={handleChatButtonClick}>Start Chat</button>
+                    </div>
                 </div>
             }
         </div>
