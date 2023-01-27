@@ -36,26 +36,28 @@ const Register = (props: RegisterProps) => {
     }
 
     return(
-        <div>
-            <div>
-                <h4>Register</h4>
+        <div className="register-container">
+            <div className="register-title">
+                <h4 className="register-heading">Register</h4>
             </div>
-            <div>
-                <form onSubmit={onRegisterSubmit}>
-                    <div>
+            <div className="register-form-container">
+                <form onSubmit={onRegisterSubmit} className="register-form">
+                    <div className="form-group">
                         {username.length >= 1 ?
                             <input onChange={onChangeUser}
+                                   className="form-control"
                                    value={username}
                                    type="text"
                                    placeholder="Name"/> :
                             <input type="test"
                                     onChange={onChangeUser}
+                                    className="form-control"
                                     placeholder="Name"
                                     value={username}/>
                         }
-                        <label>Name</label>
+                        <label className="form-label">Name</label>
                     </div>
-                    <div>
+                    <div className="form-group">
                         {password.length <= 8 ?
                         <input onChange={onChangePassword}
                                 value={password}
@@ -66,26 +68,28 @@ const Register = (props: RegisterProps) => {
                                 type="password"
                                 placeholder={"Password"}/>
                         }
-                        <label>Password</label>
+                        <label className="form-label">Password</label>
                         <div>
-                            <p>The Password needs at least 8 Characters.</p>
+                            <p className="password-text">The Password needs at least 8 Characters.</p>
                         </div>
-                        <div>
+                        <div className="form-group">
                             {email.includes('@') ?
                                 <input onChange={onChangeEmail}
+                                       className="form-control"
                                        value={email}
                                        type="email"
                                        placeholder="E-Mail"/> :
                                 <input onChange={onChangeEmail}
+                                       className="form-control"
                                        value={email}
                                        type="email"
                                        placeholder={"E-Mail"}/>
                             }
-                            <label>E-Mail</label>
+                            <label className="form-label">E-Mail</label>
                         </div>
                     </div>
-                    <div>
-                        <button type={"submit"}>Register</button>
+                    <div className="button-box">
+                        <button type={"submit"} className="button-register">Register</button>
                     </div>
                 </form>
             </div>
