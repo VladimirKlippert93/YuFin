@@ -1,6 +1,7 @@
 import {Offer} from "../models/Offer";
 import OfferCard from "./OfferCard";
 import {User} from "../models/User";
+import "../../../styles/components/offers/OfferGallery.css"
 
 type OfferGalleryProps = {
     offerList : Offer[],
