@@ -1,5 +1,5 @@
 .header {
-    background-color: #F5A623;
+    background-color: #F79B26;
     color: #000000;
     display: flex;
     flex-direction: column;
@@ -11,11 +11,14 @@
     margin: 0;
     font-size: 2em;
     font-weight: bold;
+    color: #0e67b4
 }
 
 .header_subtitle {
-    margin: 5px 0;
-    font-size: 1.2em;
+    margin: 0px 0;
+    font-size: 1.3em;
     font-weight: lighter;
     text-align: center;
+    color: #0e67b4;
+    border: 1px solid #0e67b4;
 }
