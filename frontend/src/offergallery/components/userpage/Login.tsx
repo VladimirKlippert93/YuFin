@@ -30,28 +30,32 @@ export default function Login(props: LoginProps){
     }
 
     return(
-        <div>
-            <div>
+        <div className="login-container">
+            <div className="login-header">
                 <h4>Login</h4>
             </div>
-            <div>
-                <form onSubmit={onLoginSubmit}>
-                    <div>
+            <div className="login-form-container">
+                <form onSubmit={onLoginSubmit} className="login-form">
+                    <div className="form-group">
                         <input onChange={onChangeName}
                                value={name}
                                type="text"
-                               placeholder="Name"/>
-                        <label>Name</label>
+                               placeholder="Name"
+                               className="form-control"
+                        />
+                        <label className="form-label">Name</label>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <input onChange={onChangePassword}
                                value={password}
                                type="password"
-                               placeholder="Password"/>
-                        <label>Password</label>
+                               placeholder="Password"
+                               className="form-control"
+                        />
+                        <label className="form-label">Password</label>
                     </div>
-                    <div>
-                        <button type={"submit"}>Login</button>
+                    <div className="form-group">
+                        <button type={"submit"} className="form-submit-button">Login</button>
                     </div>
                 </form>
             </div>
