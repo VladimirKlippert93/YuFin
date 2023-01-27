@@ -1,5 +1,6 @@
 import Register from "./Register";
 import Login from "./Login";
+import "../../../styles/components/userpage/LoginRegisterPage.css"
 
 type LoginProps = {
     login: (name: string, password: string) => Promise<string>
