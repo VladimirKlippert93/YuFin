@@ -63,7 +63,7 @@ export default function ChatPage() {
             <div className="chat-page-header">Chatting with {receiverUsername}</div>
             <div className="chat-page-messages">
                 {messages.map((chatMessage) => (
-                    <div className="chat-message" key={chatMessage.id}>
+                    <div className={`chat-message ${chatMessage.senderUsername === receiverUsername ? "chat-message-receiver" : "chat-message-sender"}`} key={chatMessage.id}>
                         <div className="chat-message-username">{chatMessage.senderUsername}</div>
                         <div className="chat-message-text">{chatMessage.message}</div>
                         <div className="chat-message-timestamp">{chatMessage.timestamp.toString()}</div>
