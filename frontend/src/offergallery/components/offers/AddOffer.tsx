@@ -30,9 +30,6 @@ export default function AddOffer(props: OfferProps){
     const [offer, setOffer] = useState<Offer>(emptyFormPlaceholder)
     const [address, setAddress] = useState<Address>(emptyFormPlaceholderAddress)
 
-
-    const isAuthenticated: boolean = props.user.username !== 'anonymousUser' && props.user.username !== null && props.user.username !== undefined
-
     function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault()
         saveOffer(offer.title,offer.price,address,offer.description,props.user.username)
@@ -69,40 +66,41 @@ export default function AddOffer(props: OfferProps){
     }
 
     return (
-        <div>{isAuthenticated ?
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <span>Title:</span>
-                        <input onChange={handleChange} type="text" placeholder="" value={offer.title} name={"title"}/>
-                    </div>
-                    <div>
-                        <span>Price:</span>
-                        <input onChange={handleChange} type="text" placeholder="" value={offer.price} name={"price"}/>
-                    </div>
-                    <div>
-                        <span>Address:</span>
-                        <input onChange={handleChangeAddress} type="text" placeholder="Street" value={address.street}
-                               name={"street"}/>
-                        <input onChange={handleChangeAddress} type="text" placeholder="Streetnumber"
-                               value={address.streetNumber} name={"streetNumber"}/>
-                        <input onChange={handleChangeAddress} type="text" placeholder="City" value={address.city}
-                               name={"city"}/>
-                        <input onChange={handleChangeAddress} type="number" placeholder="Zip" value={address.zip}
-                               name={"zip"}/>
-                        <input onChange={handleChangeAddress} type="text" placeholder="Country" value={address.country}
-                               name={"country"}/>
-                    </div>
-                    <div>
-                        <span>Description:</span>
-                        <input onChange={handleChange} type="text" placeholder="" value={offer.description}
-                               name={"description"}/>
-                    </div>
-                    <div>
-                        <button type={"submit"}>Add</button>
-                    </div>
-                </form>
-            </div>: ""
-        } </div>
+        <div className= "form-container">
+
+                <div className="form-content">
+                    <form onSubmit={handleSubmit} className="form">
+                        <div className="form-group">
+                            <span className="form-label">Title:</span>
+                            <input className="form-input" onChange={handleChange} type="text" placeholder="" value={offer.title} name={"title"}/>
+                        </div>
+                        <div className="form-group">
+                            <span className="form-label">Price:</span>
+                            <input className="form-input" onChange={handleChange} type="text" placeholder="" value={offer.price} name={"price"}/>
+                        </div>
+                        <div className="form-group">
+                            <span className="form-label">Address:</span>
+                            <input className="form-input" onChange={handleChangeAddress} type="text" placeholder="Street" value={address.street}
+                                   name={"street"}/>
+                            <input className="form-input" onChange={handleChangeAddress} type="text" placeholder="Streetnumber"
+                                   value={address.streetNumber} name={"streetNumber"}/>
+                            <input className="form-input" onChange={handleChangeAddress} type="text" placeholder="City" value={address.city}
+                                   name={"city"}/>
+                            <input className="form-input" onChange={handleChangeAddress} type="number" placeholder="Zip" value={address.zip}
+                                   name={"zip"}/>
+                            <input className="form-input" onChange={handleChangeAddress} type="text" placeholder="Country" value={address.country}
+                                   name={"country"}/>
+                        </div>
+                        <div className="form-group">
+                            <span className="form-label">Description:</span>
+                            <input className="form-input" onChange={handleChange} type="text" placeholder="" value={offer.description}
+                                   name={"description"}/>
+                        </div>
+                        <div className="form-group">
+                            <button className="form-button" type={"submit"}>Add</button>
+                        </div>
+                    </form>
+                </div>
+        </div>
     )
 }
