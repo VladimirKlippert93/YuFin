@@ -3,6 +3,7 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {Address} from "../models/Address";
 import axios from "axios";
 import {User} from "../models/User";
+import "../../../styles/components/offers/AddOffer.css"
 
 type OfferProps = {
     user: User
