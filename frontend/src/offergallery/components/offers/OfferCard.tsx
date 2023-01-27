@@ -2,6 +2,7 @@ import {Offer} from "../models/Offer";
 import {useNavigate} from "react-router-dom";
 import * as React from 'react';
 import {User} from "../models/User";
+import "../../../styles/components/offers/OfferCard.css"
 
 export type OfferCardProps = {
     offer: Offer,
@@ -25,16 +26,15 @@ export default function OfferCard(props: OfferCardProps){
         <div className={"offercard"}>
             {!props && <p>loading files...</p>}
             <div className={"offercard_border"} onClick={handleDetailsClick}>
-                <h2>{props.offer.title}</h2>
-                <p>{props.offer.price}</p>
-                <p>{props.offer.address.city}</p>
+                <h2 className="offercard_offer_title">{props.offer.title}</h2>
+                <p className="offercard_offer_price">{props.offer.price}</p>
+                <p className="offercard_offer_city">{props.offer.address.city}</p>
 
             </div>
             {
                 props.user.username && props.user.username !== "unknown User" && props.user.username === props.offer.author ?
                 <button onClick={deleteOffer}>Delete</button>: ""
             }
-            <hr/>
         </div>
     )
 }
