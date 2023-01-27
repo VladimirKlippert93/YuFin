@@ -4,7 +4,10 @@ import axios from 'axios';
 import {User} from "../models/User";
 import "../../../styles/components/chat/ChatOverview.css"
 
-export default function ChatOverview() {
+type ChatOverviewProps = {
+    user:User
+}
+export default function ChatOverview(props: ChatOverviewProps) {
     const [users, setUsers] = useState<string[]>([]);
     const navigate = useNavigate();
 
@@ -19,8 +22,9 @@ export default function ChatOverview() {
     return (
         <div className="users-list">
             {users.map((username) => (
-                <div className="user" key={username} onClick={() => navigate(`/chat/${username}`)}>
-                    {username}
+                props.user.username !== username &&
+                 <div className="user" key={username} onClick={() => navigate(`/chat/${username}`)}>
+                         {username}
                 </div>
             ))}
         </div>
