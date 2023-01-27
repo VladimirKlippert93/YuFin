@@ -18,19 +18,19 @@
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid #0e67b4;
     border-radius: 4px;
 }
 
 .form-container input[type="text"]:focus,
 .form-container input[type="number"]:focus {
-    border: 1px solid #555;
+    border: 1px solid #0e67b4;
 }
 
 .form-container button[type="submit"] {
     width: 100%;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #F79B26;
+    color: #0e67b4;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
@@ -39,5 +39,5 @@
 }
 
 .form-container button[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: #084d78;
 }
