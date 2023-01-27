@@ -1,6 +1,5 @@
 import Register from "./Register";
 import Login from "./Login";
-import "../../../styles/components/userpage/LoginRegisterPage.css"
 
 type LoginProps = {
     login: (name: string, password: string) => Promise<string>
@@ -10,11 +9,11 @@ type LoginProps = {
 const LoginRegisterPage = (props: LoginProps) => {
 
     return (
-        <div>
-            <div>
+        <div className="loginregister-box">
+            <div className="register-container">
                 <Register register={props.register}/>
             </div>
-            <div>
+            <div className="login-container">
                 <Login login={props.login}/>
             </div>
         </div>
