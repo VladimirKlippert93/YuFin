@@ -1,0 +1,21 @@
+.offer-card{
+    border: 1px solid;
+    margin-top: 5px;
+    padding: 3px;
+    color: #0e67b4;
+}
+
+.offer-card_title{
+    text-align: left;
+    padding-left: 20px;
+}
+
+.offer-card_price, .offer-card_description, .offer-card_city, .offer-card_zip, .offer-card_street{
+    text-align: left;
+    padding-left: 35px;
+}
+
+.offer-card_chat-button-box{
+    display: flex;
+    justify-content: center;
+}
