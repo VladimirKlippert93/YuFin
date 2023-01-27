@@ -4,6 +4,7 @@ import {Offer} from "./components/models/Offer";
 import axios from "axios";
 import SearchBar from "./components/offers/SearchBar";
 import {User} from "./components/models/User";
+import "../styles/components/OfferApp.css"
 
 type OfferAppProps={
     user: User
