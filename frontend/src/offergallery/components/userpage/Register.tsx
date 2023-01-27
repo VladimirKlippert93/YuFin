@@ -1,5 +1,6 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import "../../../styles/components/userpage/Register.css"
 
 type RegisterProps = {
     register: (user: string, password: string, email: string)=>void
