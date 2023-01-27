@@ -1,5 +1,6 @@
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import "../../../styles/components/userpage/Login.css"
 
 type LoginProps = {
     login: (name: string, password: string) => Promise<string>
