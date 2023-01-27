@@ -25,7 +25,7 @@ export default function App() {
                     <Route path={"/login"} element={<LoginRegisterPage login={login} register={register}/>}/>
                     <Route path={"/offers/:id"} element={<OfferDetails/>}></Route>
                     <Route path="/chat/:receiverUsername" element={<ChatPage/>}/>
-                    <Route path={"/chatoverview"} element={<ChatOverview/>} />
+                    <Route path={"/chatoverview"} element={<ChatOverview user={user}/>} />
                 </Routes>
             </BrowserRouter>
         </div>
