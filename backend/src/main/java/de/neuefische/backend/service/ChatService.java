@@ -53,7 +53,9 @@ public class ChatService extends TextWebSocketHandler{
 
             String senderUsername = Objects.requireNonNull(session.getPrincipal()).getName();
         ChatMessage lastChatMessage = chatRepo.findFirstBySenderUsernameOrderByTimestampDesc(senderUsername);
-        sendPreviousMessages(session, senderUsername, lastChatMessage.getReceiverUsername());
+        if (lastChatMessage != null) {
+            sendPreviousMessages(session, senderUsername, lastChatMessage.getReceiverUsername());
+        }
     }
 
     @Override
