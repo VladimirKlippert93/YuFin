@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import {ChatMessage, NewChatMessage} from "../models/ChatMessage";
+import {ChatMessage} from "../models/ChatMessage";
 import useUser from "../hooks/useUser";
 import axios from 'axios';
 import "../../../styles/components/chat/ChatPage.css"
@@ -17,25 +17,23 @@ export default function ChatPage() {
 
 
     useEffect(() => {
-
         axios.get<ChatMessage[]>(`/api/chat/previous-messages?senderUsername=${senderUsername}&receiverUsername=${receiverUsername}`)
             .then((res) => {
                 setMessages(res.data);
             })
             .catch((error) => console.log(error));
+        const ws = new WebSocket(`ws://localhost:8080/api/ws/chat`);
+        setWs(ws);
 
-            const ws = new WebSocket(`ws://localhost:8080/api/ws/chat`);
-            setWs(ws);
-
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data.senderUsername === senderUsername && data.receiverUsername === receiverUsername) {
-                    setMessages((prevMessages) => [...prevMessages, data]);
-                }
-            };
-            ws.onclose = () =>{
-                setMessages([]);
-            };
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.senderUsername ===receiverUsername && data.receiverUsername === senderUsername && data.senderUsername !== data.receiverUsername) {
+                setMessages((prevMessages) => [...prevMessages, data]);
+            }
+        };
+        ws.onclose = () => {
+            setMessages([]);
+        };
 
         return () => {
             if (ws) {
@@ -48,12 +46,15 @@ export default function ChatPage() {
         event.preventDefault();
         if (receiverUsername !== undefined && senderUsername !== undefined && ws && ws.readyState === WebSocket.OPEN) {
 
-            const newChatMessage: NewChatMessage = {
+            const newChatMessage: ChatMessage = {
                 senderUsername,
                 receiverUsername,
-                message
+                message,
+                id: Date.now().toString(),
+                timestamp: new Date()
             };
                 ws.send(JSON.stringify(newChatMessage));
+                setMessages((prevMessages)=>[...prevMessages, newChatMessage]);
             setMessage('');
         }
     };
