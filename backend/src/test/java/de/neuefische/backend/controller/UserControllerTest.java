@@ -3,22 +3,29 @@ package de.neuefische.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.security.MongoUserRepo;
+import de.neuefische.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +36,8 @@ class UserControllerTest {
     @Autowired
     MongoUserRepo mongoUserRepo;
 
+    @MockBean
+    private UserService userService;
     @Autowired
     MockMvc mockMvc;
 
@@ -87,5 +96,22 @@ class UserControllerTest {
         String content = result.getResponse().getContentAsString();
         MongoUser user = objectMapper.readValue(content, MongoUser.class);
         assertNotNull(user.email());
+    }
+
+    @Test
+    void getAllUsersShouldReturnListOfUsers() throws Exception {
+        MongoUser user1 = new MongoUser("user1", "password", "email@email.com", new ArrayList<>());
+        MongoUser user2 = new MongoUser("user2", "password", "email2@email.com", new ArrayList<>());
+        List<MongoUser> users = Arrays.asList(user1, user2);
+
+        when(userService.getAllUsers()).thenReturn(users);
+
+        MvcResult result = mockMvc.perform(get("/api/users/all"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String resultAsString = result.getResponse().getContentAsString();
+        List<MongoUser> resultUsers = Arrays.asList(new ObjectMapper().readValue(resultAsString, MongoUser[].class));
+        assertEquals(users, resultUsers);
     }
 }
