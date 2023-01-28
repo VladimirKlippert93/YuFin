@@ -4,6 +4,13 @@ import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.models.UserDTO;
 import de.neuefische.backend.security.MongoUserRepo;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 
@@ -40,5 +47,40 @@ class UserServiceTest {
 
         assertEquals(expected, actual);
         verify(mongoUserRepo).save(expected);
+    }
+
+    @Test
+    void loadUserByUsernameShouldThrowExceptionIfUserNotFound() {
+        when(mongoUserRepo.findByUsername("username")).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("username"));
+    }
+
+    @Test
+    void loadUserByUsernameShouldReturnUserDetails() {
+        MongoUser mongoUser = new MongoUser("username", "hashedpassword", "email", null);
+        when(mongoUserRepo.findByUsername("username")).thenReturn(Optional.of(mongoUser));
+
+        UserDetails userDetails = userService.loadUserByUsername("username");
+
+        assertEquals("username", userDetails.getUsername());
+        assertEquals("hashedpassword", userDetails.getPassword());
+    }
+
+    @Test
+    void getAllUsersShouldReturnAllUsers() {
+        MongoUser user1 = new MongoUser("username1", "hashedpassword1", "email1", null);
+        MongoUser user2 = new MongoUser("username2", "hashedpassword2", "email2", null);
+        when(mongoUserRepo.findAll()).thenReturn(List.of(user1, user2));
+
+        List<MongoUser> allUsers = userService.getAllUsers();
+
+        assertEquals(2, allUsers.size());
+        assertEquals("username1", allUsers.get(0).username());
+        assertEquals("hashedpassword1", allUsers.get(0).password());
+        assertEquals("email1", allUsers.get(0).email());
+        assertEquals("username2", allUsers.get(1).username());
+        assertEquals("hashedpassword2", allUsers.get(1).password());
+        assertEquals("email2", allUsers.get(1).email());
+        verify(mongoUserRepo, times(1)).findAll();
     }
 }
