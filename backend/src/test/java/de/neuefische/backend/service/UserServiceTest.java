@@ -4,8 +4,12 @@ import de.neuefische.backend.models.MongoUser;
 import de.neuefische.backend.models.UserDTO;
 import de.neuefische.backend.security.MongoUserRepo;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
@@ -82,5 +86,23 @@ class UserServiceTest {
         assertEquals("hashedpassword2", allUsers.get(1).password());
         assertEquals("email2", allUsers.get(1).email());
         verify(mongoUserRepo, times(1)).findAll();
+    }
+
+    @Test
+    void testGetUserByLogin() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        String username = "testUser";
+        MongoUser expectedUser = new MongoUser(username, "", "", Collections.emptyList());
+        Optional<MongoUser> userOptional = Optional.of(expectedUser);
+        when(mongoUserRepo.findByUsername(username)).thenReturn(userOptional);
+        when(authentication.getName()).thenReturn(username);
+        SecurityContextHolder.setContext(securityContext);
+
+        MongoUser actualUser = userService.getUserByLogin();
+
+        assertThat(actualUser).isEqualTo(expectedUser);
     }
 }
