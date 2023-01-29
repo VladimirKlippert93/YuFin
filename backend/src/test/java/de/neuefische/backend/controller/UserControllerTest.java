@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,4 +115,34 @@ class UserControllerTest {
         List<MongoUser> resultUsers = Arrays.asList(new ObjectMapper().readValue(resultAsString, MongoUser[].class));
         assertEquals(users, resultUsers);
     }
+
+    @Test
+    @DirtiesContext
+    void addOffer() throws Exception {
+
+        String offerJson = """
+                {
+                "id": "1",
+                "title": "title",
+                "price": "price",
+                "address": {
+                "id": "3",
+                "street": "street",
+                "streetnumber": "streetnumber",
+                "city": "city",
+                "zip": 23,
+                "country": "country"
+                },
+                "description": "description",
+                "author": "author"
+                }
+                """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/offers/addoffer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(offerJson)
+                        .with(csrf()))
+                .andExpect(status().isOk());
+    }
+
 }
