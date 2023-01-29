@@ -7,8 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -22,6 +24,7 @@ class OfferControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private OfferRepo offerRepo;
+
     @Test
     @DirtiesContext
     void expectEmptyListOnGet() throws Exception {
@@ -51,26 +54,26 @@ class OfferControllerTest {
         );
 
         Offer result = offerRepo.save(newOffer);
-        mockMvc.perform(get("/api/offers/"+result._id()))
+        mockMvc.perform(get("/api/offers/" + result._id()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                            {
-                            "_id": "1",
-                            "title": "help",
-                            "price": "money",
-                            "address": {
-                            "id":"3",
-                            "street":"street",
-                            "streetNumber":"streetnumber",
-                            "city":"city",
-                            "zip":23,
-                            "country":"country"
-                            },
-                            "description": "very good help",
-                            "author": "author"
-                            }\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040
-                            """));
-        }
+                        {
+                        "_id": "1",
+                        "title": "help",
+                        "price": "money",
+                        "address": {
+                        "id":"3",
+                        "street":"street",
+                        "streetNumber":"streetnumber",
+                        "city":"city",
+                        "zip":23,
+                        "country":"country"
+                        },
+                        "description": "very good help",
+                        "author": "author"
+                        }\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040\040
+                        """));
+    }
 
     @Test
     @DirtiesContext
@@ -94,4 +97,34 @@ class OfferControllerTest {
         mockMvc.perform(delete("/api/offers/" + offer._id()).with(csrf()))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DirtiesContext
+    void addOffer() throws Exception {
+
+        String offerJson = """
+                {
+                "id": "1",
+                "title": "title",
+                "price": "price",
+                "address": {
+                "id": "3",
+                "street": "street",
+                "streetnumber": "streetnumber",
+                "city": "city",
+                "zip": 23,
+                "country": "country"
+                },
+                "description": "description",
+                "author": "author"
+                }
+                """;
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/offers/addoffer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(offerJson)
+                        .with(csrf()))
+                .andExpect(status().isOk());
+    }
+
 }
