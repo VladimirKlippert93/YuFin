@@ -82,7 +82,7 @@ class UserControllerTest {
     @Test
     @DirtiesContext
     void saveUser() throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/users/register")
+        mockMvc.perform(post("/api/users/register")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -92,11 +92,7 @@ class UserControllerTest {
                                     "email": "ab@212"
                                 }
                                 """))
-                .andExpect(status().isOk())
-                .andReturn();
-        String content = result.getResponse().getContentAsString();
-
-        assertNotNull(content);
+                .andExpect(status().isOk());
     }
 
     @Test
