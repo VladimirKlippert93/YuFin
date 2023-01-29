@@ -81,6 +81,7 @@ class UserControllerTest {
 
     @Test
     @DirtiesContext
+    @WithMockUser
     void saveUser() throws Exception {
         mockMvc.perform(post("/api/users/register")
                         .with(csrf())
